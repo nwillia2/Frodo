@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Frodo</string>
+    <!-- Activity Labels -->
+    <string name="activity_map">Map</string>
+    
+    
+    <string name="hello_world">Hello world!</string>
+    
+    <!-- Menus -->
+    <string name="menu_map">Map</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_about">About</string>
+
+</resources>
