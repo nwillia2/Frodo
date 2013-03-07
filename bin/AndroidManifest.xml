@@ -43,7 +43,7 @@
             android:label="@string/activity_map" />
         <meta-data 
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAFJ4AQCqW7niuRBQdpufcPQiPD2UJ39bs"/>
+            android:value="Your API Key Here"/>
     </application>
 
 </manifest>
