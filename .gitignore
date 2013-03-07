@@ -12,4 +12,4 @@
 bin/
 gen/
 
-AndroidManifest.xml
+AndroidManifest.out.*
