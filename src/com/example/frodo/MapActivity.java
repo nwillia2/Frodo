@@ -16,14 +16,29 @@
 
 package com.example.frodo;
 
+import java.util.List;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
+import com.google.android.gms.maps.LocationSource.OnLocationChangedListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.parse.FindCallback;
+import com.parse.GetCallback;
+import com.parse.Parse;
+import com.parse.ParseException;
+import com.parse.ParseGeoPoint;
+import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
@@ -38,11 +53,15 @@ public class MapActivity extends FragmentActivity {
      * Note that this may be null if the Google Play services APK is not available.
      */
     private GoogleMap mMap;
+    private SupportMapFragment fMapfragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+                
+        Parse.initialize(this, "NXjfUNUKL9NCQL20Qbfs9eIFv6VyC34kve2gFJqp", "EVUJzRRT09wDfloKp37h3z2jFxgGuYLrfx8c1OTX");        
+        
         setUpMapIfNeeded();
     }
 
@@ -71,29 +90,87 @@ public class MapActivity extends FragmentActivity {
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
             // Try to obtain the map from the SupportMapFragment.
-            mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map))
-                    .getMap();
+        	fMapfragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
+        	mMap = fMapfragment.getMap();
             // Check if we were successful in obtaining the map.
             if (mMap != null) {
                 setUpMap();
             }
         }
     }
+    
+    private OnMyLocationChangeListener myLocationChangeListener = new OnMyLocationChangeListener() {
+
+		@Override
+		public void onMyLocationChange(Location arg0) {
+			// Our location should only change at least every two minutes now that the location service is custom			
+			// get the current location
+			Location currentLocation = mMap.getMyLocation();
+	    	if (currentLocation != null) {
+	    		// update camera   			    			    	    		
+		    	CameraPosition cameraPosition = new CameraPosition.Builder()
+		        .target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
+		        .zoom(mMap.getMaxZoomLevel() - 1)
+		        .build();                   
+		    	mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+		    	
+		    	// if we have a location, go away and get some information about our location	
+		    	// get near quests
+		    	getQuests(currentLocation);
+	    	}
+		}				
+    	
+	};
+	
+	private void getQuests(Location currentLocation){
+		ParseQuery query = new ParseQuery("Quests");
+		ParseGeoPoint coords = new ParseGeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude());	    			    		
+		query.whereWithinMiles("coordinates", coords, 25).findInBackground(new FindCallback() {
+			
+			@Override
+			public void done(List<ParseObject> objects, ParseException e) {
+				// TODO Auto-generated method stub
+				if (e == null) {
+					// do something with the quests
+					// for each quest returned, I want to add a placemarker to the current map
+					for (ParseObject obj : objects) {
+						MarkerOptions mo = new MarkerOptions();
+						mo.title(obj.getString("title"));
+						
+						ParseGeoPoint parseCoords = obj.getParseGeoPoint("coordinates");
+						LatLng coords = new LatLng(parseCoords.getLatitude(), parseCoords.getLongitude());
+						mo.position(coords);
+						
+						mMap.addMarker(mo);
+					}
+				} else {
+					// something went wrong
+				}						
+			}
+		});
+	}
 
     /**
      * This is where we can add markers or lines, add listeners or move the camera. In this case, we
      * <p>
      * This should only be called once and when we are sure that {@link #mMap} is not null.
      */
-    private void setUpMap() {
-    	Location currentLocation = mMap.getMyLocation();
+    private void setUpMap() {   	
+    	mMap.setLocationSource(new CurrentLocationProvider(this));
+    	mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+    	mMap.setMyLocationEnabled(true);
+    	mMap.getUiSettings().setMyLocationButtonEnabled(false);    	       	    
     	
     	CameraPosition cameraPosition = new CameraPosition.Builder()
-        .target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))      // Sets the center of the map to Mountain View
-        .zoom(17)                   // Sets the zoom
-        .bearing(90)                // Sets the orientation of the camera to east
-        .tilt(30)                   // Sets the tilt of the camera to 30 degrees
-        .build();                   // Creates a CameraPosition from the builder
-    	mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+	        .target(new LatLng(52.414357, -4.087629))      // Sets the center of the map to Brecon Beacons
+	        .zoom(7)                   // Sets the zoom
+	        .bearing(0)                // Sets the orientation of the camera to east
+	        .tilt(0)                   // Sets the tilt of the camera to 30 degrees
+	        .build();                   // Creates a CameraPosition from the builder
+	    	mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));    		    
+	    	
+    	mMap.setOnMyLocationChangeListener(myLocationChangeListener);
+    	
+    	
     }
 }
