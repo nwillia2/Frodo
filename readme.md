@@ -14,9 +14,7 @@ Set-up
 ------
 1. Pull down this repo into your workspace
 2. Import the project into Eclipse, Import -> Java -> Project from existing source
-3. Request a copy of the android.manifest file from me.
 3. Setup the google maps api key. To do this, you need to generate your debug sha key and send it to me:
 <code>
   keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
 </code>
-4. Run the project
