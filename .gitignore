@@ -13,3 +13,5 @@ bin/
 gen/
 
 AndroidManifest.*
+AndroidManifest.xml
+AndroidManifest.local.*
