@@ -18,29 +18,23 @@ package com.example.frodo;
 
 import java.util.List;
 
+import android.location.Location;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
-import com.google.android.gms.maps.LocationSource.OnLocationChangedListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 
 /**
  * This shows how to create a simple activity with a map and a marker on the map.
@@ -58,9 +52,7 @@ public class MapActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
-                
-        Parse.initialize(this, "NXjfUNUKL9NCQL20Qbfs9eIFv6VyC34kve2gFJqp", "EVUJzRRT09wDfloKp37h3z2jFxgGuYLrfx8c1OTX");        
+        setContentView(R.layout.activity_map);              
         
         setUpMapIfNeeded();
     }
