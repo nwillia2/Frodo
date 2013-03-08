@@ -35,6 +35,7 @@ import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 /**
  * This shows how to create a simple activity with a map and a marker on the map.
@@ -115,7 +116,7 @@ public class MapActivity extends FragmentActivity {
 	};
 	
 	private void getQuests(Location currentLocation){
-		ParseQuery query = new ParseQuery("Quests");
+		ParseQuery query = new ParseQuery("Quest");
 		ParseGeoPoint coords = new ParseGeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude());	    			    		
 		query.whereWithinMiles("coordinates", coords, 25).findInBackground(new FindCallback() {
 			
@@ -126,6 +127,12 @@ public class MapActivity extends FragmentActivity {
 					// do something with the quests
 					// for each quest returned, I want to add a placemarker to the current map
 					for (ParseObject obj : objects) {
+						// now that we have the quests, we want to display them. But quests come in different shapes
+						// new quests (not picked up)
+						
+						
+						
+						
 						MarkerOptions mo = new MarkerOptions();
 						mo.title(obj.getString("title"));
 						
