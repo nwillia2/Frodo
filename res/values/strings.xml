@@ -3,7 +3,6 @@
     <string name="app_name">Frodo</string>
     <!-- Activity Labels -->
     <string name="activity_map">Map</string>
-    
     <string name="main_text">Welcome to Frodo!</string>
     
     <!-- Menus -->

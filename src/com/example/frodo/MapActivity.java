@@ -129,10 +129,6 @@ public class MapActivity extends FragmentActivity {
 					for (ParseObject obj : objects) {
 						// now that we have the quests, we want to display them. But quests come in different shapes
 						// new quests (not picked up)
-						
-						
-						
-						
 						MarkerOptions mo = new MarkerOptions();
 						mo.title(obj.getString("title"));
 						
