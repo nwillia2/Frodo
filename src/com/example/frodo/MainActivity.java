@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	TextView main_text = null;
+	ParseUser current_user = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +38,14 @@ public class MainActivity extends Activity {
 		    Parse.initialize(this, application_key, client_key);     
 		} catch (Exception e) {			
 		    Log.e("Error Loading Parse", "Failed to load meta-data, NameNotFound: " + e.getMessage());
-		}		
+		}					
 		
 		// setup some variables
 		main_text = (TextView) findViewById(R.id.main_text);
+		current_user = ParseUser.getCurrentUser(); 
+		if (current_user != null) {
+			main_text.setText(getString(R.string.parse_login_success, current_user.getUsername()));
+		}
 	}
 
 	@Override
@@ -51,13 +56,15 @@ public class MainActivity extends Activity {
 	}
 	
 	public boolean onOptionsItemSelected (MenuItem item){
+		Intent intent = null;
 		switch (item.getItemId()){
 		case R.id.menu_map:
-			Intent intent = new Intent(this, MapActivity.class);
+			intent = new Intent(this, MapActivity.class);
 			startActivity(intent);
 			return true;
 		case R.id.menu_login:
-			login();
+			intent = new Intent(this, LoginActivity.class);
+			startActivity(intent);
 			return true;
 		case R.id.menu_logout:
 			logout();
@@ -65,25 +72,7 @@ public class MainActivity extends Activity {
 		}
 		
 		return super.onOptionsItemSelected(item);
-	}
-	
-	private void login(){
-		// log in as a user		
-		main_text.setText(getString(R.string.parse_login_init));
-		ParseUser.logInInBackground("test", "test", new LogInCallback() {
-			
-			@Override
-			public void done(ParseUser user, ParseException e) {
-				if (e == null) {
-					main_text.setText(getString(R.string.parse_login_success, user.getUsername()));
-				} else {
-					main_text.setText(getString(R.string.parse_login_fail, "test"));
-					Log.e("Error Logging into Parse", "Details: " + e.getMessage());
-				}
-			}
-							
-		});
-	}
+	}		
 	
 	private void logout(){
 		final TextView main_text = (TextView) findViewById(R.id.main_text);
