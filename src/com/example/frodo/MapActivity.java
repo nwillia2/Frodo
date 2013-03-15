@@ -30,12 +30,10 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 /**
  * This shows how to create a simple activity with a map and a marker on the map.
@@ -117,7 +115,7 @@ public class MapActivity extends FragmentActivity {
 	
 	private void getQuests(Location currentLocation){
 		ParseQuery query = new ParseQuery("Quest");
-		ParseGeoPoint coords = new ParseGeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude());	    			    		
+		ParseGeoPoint coords = new ParseGeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude());		
 		query.whereWithinMiles("coordinates", coords, 25).findInBackground(new FindCallback() {
 			
 			@Override

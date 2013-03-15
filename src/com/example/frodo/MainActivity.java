@@ -1,24 +1,17 @@
 package com.example.frodo;
 
-import com.parse.LogInCallback;
-import com.parse.Parse;
-import com.parse.ParseException;
-import com.parse.ParseUser;
-import com.parse.Parse;
-
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
-
-import android.text.TextUtils.StringSplitter;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
+
+import com.parse.Parse;
+import com.parse.ParseUser;
 
 public class MainActivity extends Activity {
 	TextView main_text = null;

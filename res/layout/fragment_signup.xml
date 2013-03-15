@@ -1,0 +1,54 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/fill"
+    android:orientation="vertical">   		    
+	
+	<TextView
+        android:id="@+id/headerSignup"
+        style="@style/fill.h1"
+        android:text="@string/header_signup" />
+
+    <ScrollView
+        android:id="@+id/loginForm"
+        style="@style/fill">
+        
+        <LinearLayout
+            style="@style/fill.form">
+
+            <EditText
+                android:id="@+id/email"
+                style="@style/fill.form.textbox"
+                android:hint="@string/hint_email"
+                android:inputType="textEmailAddress" />
+
+            <EditText
+                android:id="@+id/firstName"
+                style="@style/fill.form.textbox"
+                android:hint="@string/hint_firstName"
+                android:inputType="textPersonName" />
+            
+            <EditText
+                android:id="@+id/lastName"
+                style="@style/fill.form.textbox"
+                android:hint="@string/hint_lastName"
+                android:inputType="textPersonName" />
+            
+            <EditText
+                android:id="@+id/password"
+                style="@style/fill.form.textbox"
+                android:hint="@string/hint_password"                
+                android:inputType="textPassword" />
+            
+            <EditText
+                android:id="@+id/password_confirm"
+                style="@style/fill.form.textbox"
+                android:hint="@string/hint_password"                
+                android:inputType="textPassword" />
+
+            <Button
+                android:id="@+id/signupButton"
+                style="@style/fill.form.button"
+                android:text="@string/action_sign_up" />
+        </LinearLayout>
+    </ScrollView>
+      
+</LinearLayout>

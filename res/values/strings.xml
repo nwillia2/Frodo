@@ -2,8 +2,8 @@
 <resources>
 
     <string name="app_name">Frodo</string>
-    <!-- Activity Labels -->
-    <string name="activity_map">Map</string>
+    
+    <!-- Activity Labels -->    
     <string name="main_text">Welcome to Frodo!</string>
 
     <!-- Menus -->
@@ -19,7 +19,14 @@
     <string name="parse_login_fail">Login failed for %s</string>
     <string name="parse_logout_init">Logging Out</string>
     <string name="parse_logout_success">Logout Success</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_register">RegisterActivity</string>
+    <string name="parse_signup_fail">Signup failed for %s</string>    
+    
+    <!-- Validation Error -->    
+    <string name="error_field_required">%s is a required field.</string>
+    <string name="error_field_pattern">%s is invalid.</string>
+    <string name="error_field_password_match">The passwords do not match.</string>
+    
+    <!--  Common  -->
+    <string name="common_save">Save</string>
 
 </resources>

@@ -1,17 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="title_activity_login">Sign in</string>
-
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in_register"><b>Sign in</b> or register</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <!-- Headers -->
+    <string name="activity_login">Sign in / Sign up</string>
+    <string name="header_login">Sign In</string>           
+    <string name="header_signup">Sign Up</string>
+    <string name="header_new_user">New User?</string>
+    
+    <!-- Menus -->
     <string name="menu_forgot_password">Recover lost password</string>
-    <string name="login_progress_signing_in">Signing in&#8230;</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
+    
+    <!-- Hints -->
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_firstName">First Name</string>
+    <string name="hint_lastName">Last Name</string>        
+    
+    <!-- Actions -->
+    <string name="action_sign_in"><b>Sign In</b></string>
+    <string name="action_sign_up"><b>Sign Up</b></string>    
+    
+    <!-- Pagetext -->
+    <string name="pagetext_signing_in">Signing In&#8230;</string>
+    <string name="pagetext_signing_up">Signing Up&#8230;</string>
 
 </resources>

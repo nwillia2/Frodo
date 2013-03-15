@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -18,10 +18,65 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
-    <style name="LoginFormContainer">
-        <item name="android:layout_width">match_parent</item>
+    <!--  Generic Container -->
+    <style name="fill">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">fill_parent</item> 
+        <!--  If Linear Layout -->     
+        <item name="android:orientation">vertical</item>            
+    </style>
+    
+    <!-- Headers -->
+    <style name="fill.h1">         
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">16dp</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:layout_margin">5dp</item>       
+    </style>
+    
+    <!-- Forms -->
+    <style name="fill.form">        
+        <item name="android:layout_height">wrap_content</item>          
+    </style>   
+    
+    <style name="fill.form.textbox">
+        <item name="android:textColor">#0385b5</item>
+        <item name="android:textColorHint">#FFFFFF</item>
+        <item name="android:background">#33B5E5</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:maxLines">1</item>
+	    <item name="android:singleLine">true</item>
+    </style>    
+    
+    <style name="fill.form.button">
+        <item name="android:layout_width">wrap_content</item>
+	    <item name="android:text">@string/common_save</item>	    
+	    <item name="android:layout_margin">10dp</item>
+    </style>
+    
+    <!-- Tables -->
+    <style name="fill.table">
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    
+    <style name="fill.table.row">
+        
+    </style>
+    
+    <!--  Progress -->
+    <style name="fill.progressContainer">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center_horizontal</item>        
+    </style>
+    
+    <style name="fill.progressContainer.progressText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
     </style>
 
 </resources>
