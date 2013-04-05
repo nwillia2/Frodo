@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/fill"
+    android:orientation="vertical">		    
+	
+	<TextView
+        android:id="@+id/headerQuestForm"
+        style="@style/fill.h1" />
+
+    <ScrollView
+        android:id="@+id/questForm"
+        style="@style/fill">
+        
+        <LinearLayout
+            style="@style/fill.form">
+
+            <EditText
+                android:id="@+id/questTitle"
+                style="@style/fill.form.textbox"
+                android:hint="@string/hint_title" />
+
+            <EditText
+                android:id="@+id/questDescription"
+                style="@style/fill.form.textbox"
+                android:hint="@string/hint_description"
+                android:lines="10" />
+            
+            <LinearLayout 
+                style="@style/fill.form"
+                android:orientation="horizontal">
+                
+	            <EditText
+	                android:id="@+id/questLatitude"
+	                style="@style/fill.form.textbox"
+	                android:hint="@string/hint_latitude"
+	                android:inputType="numberDecimal|numberSigned" />
+	            <EditText
+	                android:id="@+id/questLongitude"
+	                style="@style/fill.form.textbox"
+	                android:hint="@string/hint_longitude"
+	                android:inputType="numberDecimal|numberSigned" />
+	        </LinearLayout>                        
+
+            <Button
+                android:id="@+id/questSaveButton"
+                style="@style/fill.form.button"
+                android:text="@string/action_sign_in" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

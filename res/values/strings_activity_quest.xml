@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Headers -->
+    <string name="activity_quest">Quests</string>
+    <string name="header_quest_index">Quests</string>           
+    <string name="header_quest_new">New Quest</string>
+    <string name="header_quest_edit">Edit Quest</string>
+    <string name="header_quest_show">Showing Quest</string>
+    <string name="header_quest_show_actions">Quest Actions</string>
+    
+    <!-- Menus -->
+    <string name="contextmenu_quest_index">Quest Actions</string>
+    <string name="contextmenu_quest_index_showrecord">Show Record</string>
+    <string name="contextmenu_quest_index_showonmap">Show On Map</string>
+    
+    <!-- Hints -->
+    <string name="hint_title">Title</string>
+    <string name="hint_description">Description</string>
+    <string name="hint_latitude">Latitude</string>
+    <string name="hint_longitude">Longitude</string>   
+    
+    <!-- Page Text -->
+    <string name="pagetext_loading_quests">Loading Quests...</string>
+    <string name="pagetext_loading_quest">Loading Quest...</string>
+    
+    <!-- Actions -->
+    <string name="action_quest_show_map">Show On Map</string>
+</resources>

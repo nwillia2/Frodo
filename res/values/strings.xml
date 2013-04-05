@@ -2,8 +2,8 @@
 <resources>
 
     <string name="app_name">Frodo</string>
-    
-    <!-- Activity Labels -->    
+
+    <!-- Activity Labels -->
     <string name="main_text">Welcome to Frodo!</string>
 
     <!-- Menus -->
@@ -12,21 +12,26 @@
     <string name="menu_about">About</string>
     <string name="menu_login">Login</string>
     <string name="menu_logout">Logout</string>
+    <string name="menu_quest">Quests</string>
 
     <!-- Parse -->
-    <string name="parse_login_init">Logging In...</string>
     <string name="parse_login_success">Logged in as %s</string>
     <string name="parse_login_fail">Login failed for %s</string>
-    <string name="parse_logout_init">Logging Out</string>
     <string name="parse_logout_success">Logout Success</string>
-    <string name="parse_signup_fail">Signup failed for %s</string>    
-    
-    <!-- Validation Error -->    
+    <string name="parse_signup_fail">Signup failed for %s</string>
+    <string name="parse_query_fail">Could not retrieve the requested data at this time... Please try again later.</string>
+    <string name="parse_no_results">No Results...</string>
+
+    <!-- Validation Error -->
     <string name="error_field_required">%s is a required field.</string>
     <string name="error_field_pattern">%s is invalid.</string>
     <string name="error_field_password_match">The passwords do not match.</string>
-    
-    <!--  Common  -->
-    <string name="common_save">Save</string>
 
+    <!-- Common -->
+    <string name="common_save">Save</string>
+    <string name="common_please_wait">Please Wait...</string>
+    <string name="common_unknown_problem">An unknown problem occurred. Please contact the vendor.</string>
+
+    <!-- Pagetext -->
+    <string name="pagetext_saving">Saving&#8230;</string>
 </resources>

@@ -60,8 +60,4 @@ public class LoginActivity extends FragmentActivity {
 		getMenuInflater().inflate(R.menu.activity_login, menu);
 		return true;
 	}
-	
-	public void showProgress() {
-		
-	}
 }

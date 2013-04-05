@@ -105,7 +105,7 @@ public class SignupFragment extends Fragment {
 		if (!cancel) cancel = Validate.PresenceOf(lastNameTextView);
 
 		if (!cancel) {	
-			Keyboard.hideKeyboard(getActivity());
+			Keyboard.hide(getActivity());
 			signup();
 		}
 	}	

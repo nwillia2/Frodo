@@ -1,0 +1,43 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/fill"
+    android:orientation="vertical">		    
+	
+	<TextView
+        android:id="@+id/headerQuestShow"
+        style="@style/fill.h1"
+        android:text="@string/header_quest_show" />
+
+    <ScrollView
+        android:id="@+id/questShowValues"
+        style="@style/fill">
+        
+        <LinearLayout
+            style="@style/fill">
+
+            <TextView
+                android:id="@+id/titleTextView"
+                style="@style/information" />
+
+            <TextView
+                android:id="@+id/descriptionTextView"
+                style="@style/information" />
+		</LinearLayout>
+    </ScrollView>
+    
+    <TextView
+        android:id="@+id/headerQuestShowActions"
+        style="@style/fill.h2"
+        android:text="@string/header_quest_show_actions" />
+        
+    <LinearLayout
+    	style="@style/fill.form"
+    	android:id="@+id/questShowActions"
+    	android:orientation="horizontal">
+
+           <Button
+               android:id="@+id/mapButton"
+               style="@style/fill.form.button"
+               android:text="@string/action_quest_show_map" />
+	</LinearLayout>
+                            
+</LinearLayout>

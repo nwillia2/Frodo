@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/fill"
+    android:orientation="vertical" >
+    
+	<LinearLayout
+	    style="@style/fill.table.row.header"
+	    android:id="@+id/ParseObjectAdapterColumnLayout"
+	    android:orientation="horizontal"></LinearLayout>
+	
+	<LinearLayout
+	    style="@style/fill.table.row"
+	    android:id="@+id/ParseObjectAdapterValueLayout"
+	    android:orientation="horizontal"></LinearLayout>
+	
+	<TextView 
+	    style="@style/information"
+	    android:id="@+id/ParseObjectAdapterNoResults"/>
+</LinearLayout>

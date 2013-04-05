@@ -33,6 +33,19 @@
         <item name="android:layout_margin">5dp</item>       
     </style>
     
+    <style name="fill.h2" parent="fill.h1">        
+        <item name="android:textSize">25sp</item>
+        <item name="android:layout_margin">5dp</item>       
+    </style>
+    
+    <!-- General -->
+    <style name="information" parent="fill">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_margin">5dp</item>
+    </style>        
+    
     <!-- Forms -->
     <style name="fill.form">        
         <item name="android:layout_height">wrap_content</item>          
@@ -61,6 +74,19 @@
     
     <style name="fill.table.row">
         
+    </style>
+    
+    <style name="fill.table.row.header">
+        
+    </style>
+    
+    <style name="fill.table.row.cell">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:padding">5dp</item>
+    </style>
+    
+    <style name="fill.table.row.cell.header">        
+        <item name="android:textStyle">bold</item>
     </style>
     
     <!--  Progress -->

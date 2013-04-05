@@ -62,6 +62,11 @@ public class MainActivity extends Activity {
 		case R.id.menu_logout:
 			logout();
 			return true;
+		case R.id.menu_quest:
+			intent = new Intent(this, QuestActivity.class);
+			intent.setAction("INDEX");
+			startActivity(intent);
+			return true;
 		}
 		
 		return super.onOptionsItemSelected(item);
@@ -69,7 +74,7 @@ public class MainActivity extends Activity {
 	
 	private void logout(){
 		final TextView main_text = (TextView) findViewById(R.id.main_text);
-		main_text.setText(getString(R.string.parse_logout_init));		
+		main_text.setText(getString(R.string.pagetext_logging_out));		
 		ParseUser.logOut();		
 		main_text.setText(getString(R.string.parse_logout_success));
 	}

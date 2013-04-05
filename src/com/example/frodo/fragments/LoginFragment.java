@@ -107,7 +107,7 @@ public class LoginFragment extends Fragment {
 		if (!cancel) cancel = Validate.PresenceOf(passwordTextView);		
 
 		if (!cancel) {	
-			Keyboard.hideKeyboard(getActivity());
+			Keyboard.hide(getActivity());
 			login();
 		}
 	}
