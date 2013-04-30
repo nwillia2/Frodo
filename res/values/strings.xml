@@ -34,4 +34,7 @@
 
     <!-- Pagetext -->
     <string name="pagetext_saving">Saving&#8230;</string>
+    <string name="pagetext_location_finding">Finding Location...</string>
+    <string name="pagetext_location_notfound">Location could not be found</string>
+    <string name="pagetext_location_found">Location Found: %s</string>    
 </resources>

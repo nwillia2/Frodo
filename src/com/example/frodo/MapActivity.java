@@ -16,18 +16,32 @@
 
 package com.example.frodo;
 
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.HashMap;
 import java.util.List;
 
+import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnCameraChangeListener;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -47,11 +61,28 @@ public class MapActivity extends FragmentActivity {
      */
     private GoogleMap mMap;
     private SupportMapFragment fMapfragment;
+    private boolean followCamera = true;
+    Location currentLocation = null;
+    Location lastLocation = null;
+    Context context = null;
+    HashMap<String, String> parseMarkers = null;
+    TextView mapInformation = null;
+    Bundle params = null;
+    Intent intent = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);              
+        
+        context = this;
+        
+        // get the arguments passed to this activity		
+		intent = getIntent();
+		params = intent.getExtras();
+		if (params == null) {
+			params = new Bundle();
+		}
         
         setUpMapIfNeeded();
     }
@@ -88,43 +119,138 @@ public class MapActivity extends FragmentActivity {
                 setUpMap();
             }
         }
+        mapInformation = (TextView) findViewById(R.id.mapInformation);
+        mapInformation.setText(R.string.pagetext_location_finding);
+        // Acquire a reference to the system Location Manager
+ 		LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+ 		// get location using same provider criteria as we use for the maps
+     	String provider = new CurrentLocationProvider(context).getProvider();
+ 		Location currentLocation = locationManager.getLastKnownLocation(provider);
+		mapInformation.setText(R.string.pagetext_loading_quests);
+		
+		String lookupId = params.getString("ID");		
+ 		getQuests(currentLocation, lookupId);
     }
     
     private OnMyLocationChangeListener myLocationChangeListener = new OnMyLocationChangeListener() {
 
 		@Override
-		public void onMyLocationChange(Location arg0) {
+		public void onMyLocationChange(Location location) {
 			// Our location should only change at least every two minutes now that the location service is custom			
 			// get the current location
-			Location currentLocation = mMap.getMyLocation();
+			if (currentLocation != null) {
+				lastLocation = new Location(currentLocation);			
+			}
+			currentLocation = location;
 	    	if (currentLocation != null) {
 	    		// update camera   			    			    	    		
-		    	CameraPosition cameraPosition = new CameraPosition.Builder()
-		        .target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
-		        .zoom(mMap.getMaxZoomLevel() - 1)
-		        .build();                   
-		    	mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+	    		if (followCamera) {
+	    			moveCamera(currentLocation);
+		    	}
 		    	
-		    	// if we have a location, go away and get some information about our location	
-		    	// get near quests
-		    	getQuests(currentLocation);
+	    		if (lastLocation != null) {
+			    	// if we have a location, go away and get some information about our location	
+			    	// get near quests
+		    		// only do this if we have significantly changed location (4 decimal places)
+		    		DecimalFormat df = new DecimalFormat("###.####");					 
+					String lastLat = df.format(lastLocation.getLatitude());
+					String lastLng = df.format(lastLocation.getLongitude());
+					String currentLat = df.format(currentLocation.getLatitude());
+					String currentLng = df.format(currentLocation.getLongitude());					
+					if (!lastLat.equals(currentLat) && !lastLng.equals(currentLng)) {
+						mapInformation.setText(R.string.pagetext_loading_quests_location_changed);
+				    	getQuests(currentLocation);
+					}		    	
+	    		}
 	    	}
 		}				
     	
 	};
 	
-	private void getQuests(Location currentLocation){
+	private OnCameraChangeListener cameraChangeListener = new OnCameraChangeListener() {
+		
+		@Override
+		public void onCameraChange(CameraPosition position) {
+			// we've moved the camera, toggle flag so that the camera stops following our location
+			// unless we move the camera back to our current location...
+			followCamera = false;			
+			if (position != null) {
+				LatLng coords = position.target;
+				if (currentLocation != null) {
+					DecimalFormat df = new DecimalFormat("###.####");					 
+					String cameraLat = df.format(coords.latitude);
+					String cameraLng = df.format(coords.longitude);
+					String myLat = df.format(currentLocation.getLatitude());
+					String myLng = df.format(currentLocation.getLongitude());					
+					if (cameraLat.equals(myLat) && cameraLng.equals(myLng)) {
+						followCamera = true;
+					}
+				}
+			}			
+		}
+	};
+	
+	private OnMarkerClickListener markerClickListener = new OnMarkerClickListener(){
+
+		@Override
+		public boolean onMarkerClick(Marker marker) {
+			// We have clicked on one of the markers on the map
+			// find out what it was, and what to do with it
+			if (marker.isInfoWindowShown()) {
+				marker.hideInfoWindow();
+			} else {
+				marker.showInfoWindow();
+			}
+			return false;
+		}
+		
+	};
+	
+	private OnInfoWindowClickListener infoWindowClickListener = new OnInfoWindowClickListener(){
+
+		@Override
+		public void onInfoWindowClick(Marker marker) {
+			// if we click on the information marker, I want to go to the show page for the quest.
+			// get the parseObjectId from our hash			
+			String objectId = parseMarkers.get(marker.getId());
+			if (objectId != null) {
+				Intent intent = new Intent(context, QuestActivity.class);
+				intent.setAction("SHOW");
+				intent.putExtra("ID", objectId);				
+				startActivity(intent);
+			} else {
+				Toast.makeText(getApplicationContext(), R.string.common_unknown_problem, Toast.LENGTH_LONG).show();
+			}
+		}
+		
+	};
+	
+	private void getQuests(Location currentLocation) {
+		getQuests(currentLocation, null);
+	}
+	
+	private void getQuests(Location currentLocation, String questId){
+		final String lookupId = questId;
 		ParseQuery query = new ParseQuery("Quest");
 		ParseGeoPoint coords = new ParseGeoPoint(currentLocation.getLatitude(), currentLocation.getLongitude());		
 		query.whereWithinMiles("coordinates", coords, 25).findInBackground(new FindCallback() {
 			
 			@Override
 			public void done(List<ParseObject> objects, ParseException e) {
-				// TODO Auto-generated method stub
 				if (e == null) {
+					ParseObject lookupObj = null;
+					Marker lookupMarker = null;
+					
 					// do something with the quests
 					// for each quest returned, I want to add a placemarker to the current map
-					for (ParseObject obj : objects) {
+					// clear the hash which we use to map a marker against a quest
+					if (parseMarkers != null) {
+						parseMarkers.clear();
+					} else {
+						parseMarkers = new HashMap<String, String>();
+					}
+					mMap.clear();
+					for (ParseObject obj : objects) {						
 						// now that we have the quests, we want to display them. But quests come in different shapes
 						// new quests (not picked up)
 						MarkerOptions mo = new MarkerOptions();
@@ -132,12 +258,32 @@ public class MapActivity extends FragmentActivity {
 						
 						ParseGeoPoint parseCoords = obj.getParseGeoPoint("coordinates");
 						LatLng coords = new LatLng(parseCoords.getLatitude(), parseCoords.getLongitude());
-						mo.position(coords);
+						mo.position(coords);	
 						
-						mMap.addMarker(mo);
+						mo.snippet(obj.getString("description"));											
+						
+						Marker marker = mMap.addMarker(mo);						
+						parseMarkers.put(marker.getId(), obj.getObjectId());
+						
+						// while we're going through these, see if we've got an id to lookup
+						if (lookupId != null) {
+							if (obj.getObjectId().equals(lookupId)) {
+								lookupObj = obj;
+								lookupMarker = marker;
+							}
+						}
+					}
+					mapInformation.setText(R.string.pagetext_loaded_quests);
+					
+					// once we finish loading the quests, see if we have retreived a lookupObject
+					if (lookupObj != null) {
+						// we have, lets change our camera to the coordinates of the object						
+						moveCamera(lookupObj.getParseGeoPoint("coordinates"));
+						// then we want to expand the information for that quest
+						lookupMarker.showInfoWindow();
 					}
 				} else {
-					// something went wrong
+					Toast.makeText(getApplicationContext(), R.string.parse_query_fail, Toast.LENGTH_LONG).show();
 				}						
 			}
 		});
@@ -152,18 +298,47 @@ public class MapActivity extends FragmentActivity {
     	mMap.setLocationSource(new CurrentLocationProvider(this));
     	mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
     	mMap.setMyLocationEnabled(true);
-    	mMap.getUiSettings().setMyLocationButtonEnabled(false);    	       	    
+    	mMap.getUiSettings().setMyLocationButtonEnabled(true);    	       	    
+    	
+    	moveCamera();  	
+	    	
+    	mMap.setOnMyLocationChangeListener(myLocationChangeListener);
+    	mMap.setOnCameraChangeListener(cameraChangeListener);
+    	mMap.setOnMarkerClickListener(markerClickListener);
+    	mMap.setOnInfoWindowClickListener(infoWindowClickListener);
+    }
+    
+    private void moveCamera() {
+    	// default the position on brecon
+    	LatLng l = null;
+    	moveCamera(l);
+    }
+    
+    private void moveCamera(ParseGeoPoint geo) {
+    	// convert parsegeopoint into latlng
+    	LatLng position = new LatLng(geo.getLatitude(), geo.getLongitude());
+    	moveCamera(position);
+    }
+    
+    private void moveCamera(Location l) {
+    	// convert location into latlng
+    	LatLng position = new LatLng(l.getLatitude(), l.getLongitude());
+    	moveCamera(position);
+    }
+    
+    private void moveCamera(LatLng position) {
+    	float zoomLevel = mMap.getMaxZoomLevel() - 1;
+    	if (position == null){
+    		position = new LatLng(52.414357, -4.087629);
+    		zoomLevel = 7;
+    	}
     	
     	CameraPosition cameraPosition = new CameraPosition.Builder()
-	        .target(new LatLng(52.414357, -4.087629))      // Sets the center of the map to Brecon Beacons
-	        .zoom(7)                   // Sets the zoom
+	        .target(position)      // Sets the center of the map to Brecon Beacons
+	        .zoom(zoomLevel)                   // Sets the zoom
 	        .bearing(0)                // Sets the orientation of the camera to east
 	        .tilt(0)                   // Sets the tilt of the camera to 30 degrees
 	        .build();                   // Creates a CameraPosition from the builder
-	    	mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));    		    
-	    	
-    	mMap.setOnMyLocationChangeListener(myLocationChangeListener);
-    	
-    	
+    	mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));	  
     }
 }

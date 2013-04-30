@@ -23,7 +23,10 @@
     <!-- Page Text -->
     <string name="pagetext_loading_quests">Loading Quests...</string>
     <string name="pagetext_loading_quest">Loading Quest...</string>
+    <string name="pagetext_loading_quests_location_changed">Location Updated, Loading Quests...</string>
+   	<string name="pagetext_loaded_quests">Quests Loaded.</string>   	
     
     <!-- Actions -->
+    <string name="action_quest_pickup">Pick Up Quest</string>
     <string name="action_quest_show_map">Show On Map</string>
 </resources>

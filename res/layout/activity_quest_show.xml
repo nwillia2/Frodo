@@ -9,9 +9,10 @@
 
     <ScrollView
         android:id="@+id/questShowValues"
-        style="@style/fill">
+        style="@style/fill"
+        android:layout_height="100dp">
         
-        <LinearLayout
+       <LinearLayout
             style="@style/fill">
 
             <TextView
@@ -20,9 +21,15 @@
 
             <TextView
                 android:id="@+id/descriptionTextView"
-                style="@style/information" />
+                style="@style/information" />            
 		</LinearLayout>
     </ScrollView>
+    
+	<ListView
+	    android:id="@+id/questListView"
+	    style="@style/fill"
+	    android:visibility="gone">
+	</ListView>
     
     <TextView
         android:id="@+id/headerQuestShowActions"
@@ -34,6 +41,10 @@
     	android:id="@+id/questShowActions"
     	android:orientation="horizontal">
 
+           <Button
+               android:id="@+id/pickupQuestButton"
+               style="@style/fill.form.button"
+               android:text="@string/action_quest_pickup" />
            <Button
                android:id="@+id/mapButton"
                style="@style/fill.form.button"

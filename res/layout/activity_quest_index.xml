@@ -8,8 +8,13 @@
         style="@style/fill.h1"
         android:text="@string/header_quest_index" />
 
+	<TextView
+        android:id="@+id/questLocationHelp"
+        style="@style/information" />
+	
     <ListView
         android:id="@+id/questListView"
         style="@style/fill">
-    </ListView>
+    </ListView>        
+        
 </LinearLayout>

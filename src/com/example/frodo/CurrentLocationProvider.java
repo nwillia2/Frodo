@@ -12,23 +12,23 @@ public class CurrentLocationProvider implements LocationSource, LocationListener
 {
     private OnLocationChangedListener listener;
     private LocationManager locationManager;
+    private String provider; 
     
     private static final int WAIT_TIME = 1000 * 10; // 10 seconds
 
     public CurrentLocationProvider(Context context)
     {
         locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+    	criteria.setPowerRequirement(Criteria.POWER_LOW);    	
+    	provider = locationManager.getBestProvider(criteria, true);
     }
 
     @Override
     public void activate(OnLocationChangedListener listener)
     {
-        this.listener = listener;
-        
-        Criteria criteria = new Criteria();
-    	criteria.setPowerRequirement(Criteria.POWER_LOW);
-    	
-    	locationManager.requestLocationUpdates(locationManager.getBestProvider(criteria, true), WAIT_TIME, 0, this);
+        this.listener = listener;                  
+    	locationManager.requestLocationUpdates(provider, WAIT_TIME, 0, this);
     }
 
     @Override
@@ -62,5 +62,9 @@ public class CurrentLocationProvider implements LocationSource, LocationListener
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public String getProvider() {
+		return provider;
 	}
 }
