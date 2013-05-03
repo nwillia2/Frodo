@@ -1,49 +1,33 @@
 package com.example.frodo;
 
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
-import android.location.Criteria;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
-import android.text.Layout;
 import android.view.ContextMenu;
-import android.view.KeyEvent;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
-import android.view.View.OnCreateContextMenuListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.GridView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.frodo.adapters.ParseObjectAdapter;
-import com.example.frodo.fragments.ProgressFragment;
-import com.example.frodo.utils.Constants;
 import com.example.frodo.utils.Constants.ACTION;
+import com.example.frodo.utils.Progress;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -54,7 +38,7 @@ import com.parse.ParseQuery;
 public class QuestActivity extends FragmentActivity {
 
 	private Context context;
-	private ProgressDialog progress;
+	private Progress progress;
 	private Bundle params;
 	private Intent intent;
 	
@@ -64,8 +48,7 @@ public class QuestActivity extends FragmentActivity {
 		
 		context = this;
 		
-		progress = new ProgressDialog(context);
-		progress.setTitle(R.string.common_please_wait);					
+		progress = new Progress(context, R.string.common_please_wait);
 		
 		// get the arguments passed to this activity
 		// find out the action, then decide on what to do
@@ -221,7 +204,7 @@ public class QuestActivity extends FragmentActivity {
 			// Only go to the network if we request a refresh
 			query.setCachePolicy(ParseQuery.CachePolicy.CACHE_ELSE_NETWORK);
 			
-			toggleProgress(true);
+			progress.toggleProgress(true);
 			query.whereWithinMiles("coordinates", coords, 25).findInBackground(new FindCallback() {
 				
 				@Override
@@ -240,7 +223,7 @@ public class QuestActivity extends FragmentActivity {
 							Toast.makeText(getApplicationContext(), R.string.parse_query_fail, Toast.LENGTH_LONG).show();
 						}
 					}
-					toggleProgress(false);
+					progress.toggleProgress(false);
 				}
 			});
 			
@@ -269,7 +252,7 @@ public class QuestActivity extends FragmentActivity {
 	}
 	
 	private void actionShow() {
-		toggleProgress(true, getResources().getString(R.string.pagetext_loading_quest));
+		progress.toggleProgress(true, getResources().getString(R.string.pagetext_loading_quest));
 		setContentView(R.layout.activity_quest_show);
 		
 		final TextView titleTextView = (TextView) findViewById(R.id.titleTextView);
@@ -309,7 +292,7 @@ public class QuestActivity extends FragmentActivity {
 				} else {
 					Toast.makeText(getApplicationContext(), R.string.parse_query_fail, Toast.LENGTH_LONG).show();
 				}					
-				toggleProgress(false);
+				progress.toggleProgress(false);
 			}
 		});				
 	}
@@ -327,30 +310,7 @@ public class QuestActivity extends FragmentActivity {
 	
 	/**************** END ACTIONS *******************/
 	
-	/**************** PRIVATE METHODS ***************/	
-	private void toggleProgress(boolean show) {
-		String message = getResources().getString(R.string.pagetext_loading_quests);
-		toggleProgress(show, message);
-	}
-	
-	private void toggleProgress(boolean show, String message) {					
-		progress.setMessage(message);
-		
-		final boolean bShow = show;
-		runOnUiThread(new Runnable(){
-
-			@Override
-			public void run() {				
-				if (bShow) {
-					progress.show();
-				} else {
-					progress.dismiss();
-				}
-			}
-			
-		});			
-	}
-	
+	/**************** PRIVATE METHODS ***************/			
 	private void showRecord(ParseObject object) {
 		if (object != null) { 
 			// load the show action of the quest activity

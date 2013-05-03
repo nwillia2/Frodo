@@ -4,11 +4,13 @@ import java.util.regex.Pattern;
 
 import com.example.frodo.R;
 import com.example.frodo.utils.Keyboard;
+import com.example.frodo.utils.Progress;
 import com.example.frodo.utils.Validate;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -26,6 +28,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class SignupFragment extends Fragment {
+	
+	Progress progress;
+	Context context;
 	
 	private TextView emailTextView;
 	private TextView passwordTextView;
@@ -49,6 +54,9 @@ public class SignupFragment extends Fragment {
 	public void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
+		
+		context = getActivity();		
+		progress = new Progress(context, R.string.common_please_wait);
 		
 		// Set up the login form.
 		emailTextView = (EditText) getView().findViewById(R.id.email);
@@ -111,7 +119,7 @@ public class SignupFragment extends Fragment {
 	}	
 	
 	private void signup(){		
-		showProgress();
+		progress.toggleProgress(true, R.string.pagetext_signing_up);
 		
 		// Signup User
 		ParseUser u = new ParseUser();
@@ -139,24 +147,8 @@ public class SignupFragment extends Fragment {
 							   Toast.LENGTH_LONG).show();					
 					Log.e("Error Signing up to Parse", "Details: " + e.getMessage());
 				}
+				progress.toggleProgress(false);
 			}
 		});		
-	}
-	
-	private void showProgress(){
-		ProgressFragment progressFragment = new ProgressFragment();
-		Bundle args = new Bundle();
-		args.putString("progressText", getText(R.string.pagetext_signing_up).toString());
-		progressFragment.setArguments(args);
-		
-		// render the progress fragment
-		// we know what the parent of this current fragment is, and we know it's not going to be reused, so no harm in directly referencing things from the parent
-		FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-		
-		transaction.replace(R.id.fragment_container, progressFragment);
-		transaction.addToBackStack(null);
-
-		// Commit the transaction
-		transaction.commit();				
 	}
 }

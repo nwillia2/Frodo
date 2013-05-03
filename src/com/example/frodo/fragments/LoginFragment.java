@@ -1,20 +1,19 @@
 package com.example.frodo.fragments;
 
-import java.util.regex.Pattern;
-
 import com.example.frodo.MainActivity;
 import com.example.frodo.R;
 import com.example.frodo.utils.Keyboard;
+import com.example.frodo.utils.Progress;
 import com.example.frodo.utils.Validate;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.KeyEvent;
@@ -28,6 +27,9 @@ import android.widget.Toast;
 
 public class LoginFragment extends Fragment {
 
+	Progress progress;
+	Context context;
+	
 	// Values for email and password at the time of the login attempt.
 	private String email;
 	private String password;
@@ -44,6 +46,9 @@ public class LoginFragment extends Fragment {
 	
 	public void onStart() {
 		super.onStart();
+		
+		context = getActivity();		
+		progress = new Progress(context, R.string.common_please_wait);
 		
 		// Set up the login form.
 		emailTextView = (EditText) getView().findViewById(R.id.email);
@@ -114,17 +119,18 @@ public class LoginFragment extends Fragment {
 	
 	private void login(){
 		// log in as a user	
-		showProgress();
+		progress.toggleProgress(true, R.string.pagetext_signing_in);
 		ParseUser.logInInBackground(email.split("@")[0], password, new LogInCallback() {
 			
 			@Override
 			public void done(ParseUser user, ParseException e) {
 				if (e == null) {
-					Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
+					progress.toggleProgress(false);
+					Intent intent = new Intent(context, MainActivity.class);
 					startActivity(intent);
 				} else {																								
 					// else, incorrect password
-					Toast.makeText(getActivity().getApplicationContext(), 
+					Toast.makeText(context, 
 								   getString(R.string.parse_login_fail, email), 
 								   Toast.LENGTH_LONG).show();					
 					Log.e("Error Logging into Parse", "Details: " + e.getMessage());
@@ -147,22 +153,5 @@ public class LoginFragment extends Fragment {
 
 		// Commit the transaction
 		transaction.commit();
-	}
-	
-	private void showProgress() {		
-		ProgressFragment progressFragment = new ProgressFragment();
-		Bundle args = new Bundle();
-		args.putString("progressText", getText(R.string.pagetext_signing_in).toString());
-		progressFragment.setArguments(args);
-		
-		// render the progress fragment
-		// we know what the parent of this current fragment is, and we know it's not going to be reused, so no harm in directly referencing things from the parent
-		FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-		
-		transaction.replace(R.id.fragment_container, progressFragment);
-		transaction.addToBackStack(null);
-
-		// Commit the transaction
-		transaction.commit();	
 	}	
 }
